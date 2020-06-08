@@ -35,8 +35,11 @@ data_f <- data %>%
                                          T~ actividad_comercial),
          actividad_comercial = fct_inorder(actividad_comercial))
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> ebdab23e7f1da58f5e0f1a25d7eb31ebc32092ae
 ggplot(data_f)+
   geom_col(aes(x = actividad_comercial, y = total), fill = 'steelblue')+
   coord_flip()+
@@ -57,9 +60,12 @@ data_o <- data %>%
   arrange(total) %>% 
   mutate(actividad_comercial = fct_inorder(actividad_comercial))
 
+<<<<<<< HEAD
 data_o_2 <- data %>% 
   filter(actividad_comercial %in% excluded)
 
+=======
+>>>>>>> ebdab23e7f1da58f5e0f1a25d7eb31ebc32092ae
 ggplot(data_o)+
   geom_col(aes(x = actividad_comercial, y = total), fill = 'steelblue')+
   geom_text(aes(x = actividad_comercial, y = total, label = total), stat = 'sum',hjust = -.1)+
@@ -214,7 +220,11 @@ esenciales <- c("Restaurantes, bares, cafeterías, pizzerías, fast food",
 
 
 excluded_df <- joined %>% 
+<<<<<<< HEAD
   slice(unique(c(comercios_zonas_comerciales,comercios_corredores))) %>% 
+=======
+  slice(c(comercios_zonas_comerciales,comercios_corredores)) %>% 
+>>>>>>> ebdab23e7f1da58f5e0f1a25d7eb31ebc32092ae
   filter(!actividad_comercial %in% esenciales,
          !actividad_comercial %in% excluded)
 
@@ -249,6 +259,7 @@ excluded_df %>%
   arrange(desc(`Total de comercios`)) %>% 
   adorn_totals() %>% 
   export("excluded_df.xlsx")
+<<<<<<< HEAD
 
 
 data_inf %>% 
@@ -264,3 +275,5 @@ joined_filtered_df %>%
   adorn_totals() %>% 
   export("joined_filtered.xlsx")
 
+=======
+>>>>>>> ebdab23e7f1da58f5e0f1a25d7eb31ebc32092ae
