@@ -101,6 +101,85 @@ my_list$todos <- data %>%
 my_list$habilitados <- data_f %>% arrange(desc(total)) %>% 
   adorn_totals()
 
+agregados <- list(rest_comidas = c("Restaurantes, bares, cafeterías, pizzerías, fast food",
+                                   "Casas de comidas, casa de pastas y deliverys",
+                                   "Panaderías, confiterías, bombonerías, chocolaterías y sandwicherías",
+                                   "Heladerías (elaboración y venta)"),
+                  indum_acces_calz_text = c("Indumentaria (prendas de vestir, bijouterie y accesorios en general)",
+                                  "Calzados, zapaterías, carteras y billeteras (venta)","Mercerías, lanas y telas",
+                                  "Relojerías y joyerías",
+                                  "Deportes (ropa y artículos deportivos, camping, pesca, armas y bicicletería)",
+                                  "Artículos textiles para el hogar y blanco, colchones y sommiers",
+                                  "Cuero y marroquinería",
+                                  "Cotillón y Disfraces"),
+                  serv_pers = c("Peluquerías, manicuras,  pedicuras, centros de belleza, spas y  depilación",
+                                "Reparaciones en general (zapatos, electrodomésticos, ropa, etc.)",
+                                "Tatuajes y Piercings", "Tintorerías y lavaderos de ropa"),
+                  transp_almacenam = c(
+                                    "Remises, fletes y mudanzas",
+                                    "Correos públicos y privados",
+                                    "Sepelios y funerarias",
+                                    "Terminales de transporte de pasajeros en general (colectivos y marítimo)"),
+                  autos_motos = c("Autos y motos (autopartes, lubricentros, talleres mecánicos y gomerías)",
+                                  "Autos y motos (Concesionario de venta y service post venta)"),
+                  serv_prof_fin = c("Servicios profesionales (Abogados, Contadores, Escribanías, Arquitectos, etc.)",
+                                "Fotografía y ópticas",
+                                "Obtención y dotación de personal",
+                                "Veterinarias y alimentos para mascotas"
+                                ),
+                  alim_bebid = c("Kioscos y golosinerías", 
+                                 "Almacenes y supermercados chicos / Locales Express de cadenas",
+                                 "Carnicerías, fiambrerías, granjas, pescaderías",
+                                 "Fruterías y verdulerías" ,
+                                 "Alimentos y bebidas en comercios especializados (dietéticas, herboristería, vinerías, etc.)",
+                                 "Supermercados de grandes cadenas e hipermercados (incluye locales Express)"),
+                  Hoteles_alojamiento = c("Albergues transitorios y moteles",
+                                          "Hoteles, hoteles familiares, pensiones y geriátricos"),
+                  art_hogar_const= c("Cadenas de venta minorista de artículos para hogar y construcción",
+                                     "Pinturerías","Electrodomésticos y casas de audio",
+                                     "Arte, antigüedades y otros artículos usados",
+                                     "Electrodomésticos y casas de audio",
+                                     "Ferreterías, cerrajerías, tornillos y bulonerías, alarmas, materiales eléctricos, iluminación",
+                                     "Bazares, decoración y regalos",
+                                     "Materiales para la casa y construcción",
+                                     "Muebles, artículos para el hogar y la oficina (fábrica y venta)"),
+                  farm_insum_med = c("Farmacias, perfumerías, cosméticas y artículos de tocador",
+                                     "Insumos médicos, odontológicos y ortopédicos"),
+                  esparcimiento=c("Gimnasios, canchas de alquiler y yoga",
+                                  "Locales para esparcimiento (peloteros, teatros, cines, locales bailables)",
+                                  "Juegos de azar"),
+                  act_adm_apoyo = c("Agencias de turismo" ,),
+                  info_com = c("Locutorios y servicios de Internet", "Centro de atención a clientes de telecomunicaciones",
+                               "Telefonía fija y celular (venta de equipos y adicionales)"),
+                  serv_inmob = c("Inmobiliarias y constructoras, administración de consorcios"),
+                  interm_financ_seguros = c("Agencias de Seguros y ART","Bancos, financieras, tarjetas de crédito y casas de cambios",
+                                            "Rapipago, Pago Fácil, Bapro Pago y lugares de pago de servicios diversos excepto Bancos"),
+                  comercio_minorista = c("Librerías comerciales, fotocopias y útiles, y artística",
+                                         "Computación, juegos y consolas, películas, discos y CDs",
+                                         "Librerías (venta de libros y revistas)",
+                                         "Paseos de compras (puestos con estructura de metal)",
+                                         "Instrumentos musicales (venta)")
+                                  )
+                                    
+my_list$todos %>% 
+  mutate(actividad_comercial = case_when(actividad_comercial %in% agregados$rest_comidas ~ "Restaurantes y comidas",
+                                         actividad_comercial %in% agregados$indum_acces_calz_text ~ "Indumentaria, accesorios, calzado y textiles",
+                                         actividad_comercial %in% agregados$serv_non_prof~ "Servicios no profesionales",
+                                         actividad_comercial %in% agregados$autos_motos~"Autos, motos y servicios relacionados",
+                                         actividad_comercial %in% agregados$serv_prof_fin~"Servicios profesionales y financieros",
+                                         actividad_comercial %in% agregados$alim_bebid~"Venta de alimentos y bebidas",
+                                         actividad_comercial %in% agregados$Hoteles_alojamiento~"Hoteles, geriátricos y alojamiento",
+                                         actividad_comercial %in% agregados$art_hogar_const ~ "Artículos para el hogar y construcción",
+                                         actividad_comercial %in% agregados$farm_insum_med ~ "Farmacias, perfumerías e insumos médicos",
+                                         T~actividad_comercial)) %>% 
+  select(actividad_comercial) %>% unique() 
+                                  
+                                  
+                                  
+                                  
+                                 
+                        
+
 export(my_list,"tablas_agip_0520.xlsx")
 
 # geo_data <- st_read("comercios_clasificados_v2.shp")
@@ -215,7 +294,6 @@ esenciales <- c("Restaurantes, bares, cafeterías, pizzerías, fast food",
 
 excluded_df <- joined %>% 
   slice(unique(c(comercios_zonas_comerciales,comercios_corredores))) %>% 
-  slice(c(comercios_zonas_comerciales,comercios_corredores)) %>% 
   filter(!actividad_comercial %in% esenciales,
          !actividad_comercial %in% excluded)
 
