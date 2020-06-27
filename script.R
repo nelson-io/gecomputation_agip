@@ -94,9 +94,9 @@ my_list$todos <- data %>%
   arrange(desc(total)) %>% 
   mutate(actividad_comercial = case_when(actividad_comercial == "Materiales para la casa y construcción (corralones, plomería, gas, aberturas, vidrierias, marmolerías,madereras, carpinterías, herrerías, pisos, alfombras, sanitarios,etc.)" ~ "Materiales para la casa y construcción",
                                          actividad_comercial =="Clínicas privadas, centros de diagnóstico por imágenes, emergencias, medicinas prepagas, laboratorios, médicos, dentistas, kinesiología (SALUD PRIVADA)" ~ "Salud privada",
-                                         T~ actividad_comercial),
-         actividad_comercial = fct_inorder(actividad_comercial)) %>% 
-  adorn_totals()
+                                         T~ actividad_comercial))
+  #        actividad_comercial = fct_inorder(actividad_comercial)) %>% 
+  # adorn_totals()
 
 my_list$habilitados <- data_f %>% arrange(desc(total)) %>% 
   adorn_totals()
@@ -119,9 +119,12 @@ agregados <- list(rest_comidas = c("Restaurantes, bares, cafeterías, pizzerías
                                     "Remises, fletes y mudanzas",
                                     "Correos públicos y privados",
                                     "Sepelios y funerarias",
-                                    "Terminales de transporte de pasajeros en general (colectivos y marítimo)"),
+                                    "Terminales de transporte de pasajeros en general (colectivos y marítimo)",
+                                    "Depósito con ventas web"),
                   autos_motos = c("Autos y motos (autopartes, lubricentros, talleres mecánicos y gomerías)",
-                                  "Autos y motos (Concesionario de venta y service post venta)"),
+                                  "Autos y motos (Concesionario de venta y service post venta)",
+                                  "Combustibles, estaciones de servicio",
+                                  "Garages, estacionamientos pagos y lavaderos de auto"),
                   serv_prof_fin = c("Servicios profesionales (Abogados, Contadores, Escribanías, Arquitectos, etc.)",
                                 "Fotografía y ópticas",
                                 "Obtención y dotación de personal",
@@ -142,13 +145,14 @@ agregados <- list(rest_comidas = c("Restaurantes, bares, cafeterías, pizzerías
                                      "Ferreterías, cerrajerías, tornillos y bulonerías, alarmas, materiales eléctricos, iluminación",
                                      "Bazares, decoración y regalos",
                                      "Materiales para la casa y construcción",
-                                     "Muebles, artículos para el hogar y la oficina (fábrica y venta)"),
+                                     "Muebles, artículos para el hogar y la oficina (fábrica y venta)",
+                                     "Materiales para la casa y construcción (corralones, plomería, gas, aberturas, vidrierias, marmolerías,madereras, carpinterías, herrerías, pisos, alfombras, sanitarios,etc.)"),
                   farm_insum_med = c("Farmacias, perfumerías, cosméticas y artículos de tocador",
                                      "Insumos médicos, odontológicos y ortopédicos"),
                   esparcimiento=c("Gimnasios, canchas de alquiler y yoga",
                                   "Locales para esparcimiento (peloteros, teatros, cines, locales bailables)",
                                   "Juegos de azar"),
-                  act_adm_apoyo = c("Agencias de turismo" ,),
+                  act_adm_apoyo = c("Agencias de turismo" , "Viveros y jardinería"),
                   info_com = c("Locutorios y servicios de Internet", "Centro de atención a clientes de telecomunicaciones",
                                "Telefonía fija y celular (venta de equipos y adicionales)"),
                   serv_inmob = c("Inmobiliarias y constructoras, administración de consorcios"),
@@ -158,21 +162,36 @@ agregados <- list(rest_comidas = c("Restaurantes, bares, cafeterías, pizzerías
                                          "Computación, juegos y consolas, películas, discos y CDs",
                                          "Librerías (venta de libros y revistas)",
                                          "Paseos de compras (puestos con estructura de metal)",
-                                         "Instrumentos musicales (venta)")
+                                         "Instrumentos musicales (venta)",
+                                         "ZZ - Otros negocios no contemplados anteriormente",
+                                         "Jugueterías","Artículos limpieza, artículos de embalaje y pañaleras",
+                                         "Local en 1º piso con accesoo / con marquesinas"),
+                  ensenanza = c("Enseñanza privada y/o parroquiales en todos su niveles y formatos")
                                   )
                                     
-my_list$todos %>% 
+my_list$todos <- my_list$todos %>% 
   mutate(actividad_comercial = case_when(actividad_comercial %in% agregados$rest_comidas ~ "Restaurantes y comidas",
                                          actividad_comercial %in% agregados$indum_acces_calz_text ~ "Indumentaria, accesorios, calzado y textiles",
-                                         actividad_comercial %in% agregados$serv_non_prof~ "Servicios no profesionales",
+                                         actividad_comercial %in% agregados$serv_pers~ "Servicios personales",
+                                         actividad_comercial %in% agregados$transp_almacenam ~ "Transporte y almacenamiento",
                                          actividad_comercial %in% agregados$autos_motos~"Autos, motos y servicios relacionados",
-                                         actividad_comercial %in% agregados$serv_prof_fin~"Servicios profesionales y financieros",
+                                         actividad_comercial %in% agregados$serv_prof_fin~"Servicios profesionales",
                                          actividad_comercial %in% agregados$alim_bebid~"Venta de alimentos y bebidas",
                                          actividad_comercial %in% agregados$Hoteles_alojamiento~"Hoteles, geriátricos y alojamiento",
                                          actividad_comercial %in% agregados$art_hogar_const ~ "Artículos para el hogar y construcción",
                                          actividad_comercial %in% agregados$farm_insum_med ~ "Farmacias, perfumerías e insumos médicos",
+                                         actividad_comercial %in% agregados$esparcimiento ~ "Servicios de esparcimiento",
+                                         actividad_comercial %in% agregados$act_adm_apoyo ~ "Actividades administrativas y de apoyo",
+                                         actividad_comercial %in% agregados$info_com ~ "Servicios de información y comunicaciones",
+                                         actividad_comercial %in% agregados$serv_inmob ~ "Servicios inmobiliarios",
+                                         actividad_comercial %in% agregados$interm_financ_seguros~ "Servicios de intermediación financiera y seguros",
+                                         actividad_comercial %in% agregados$comercio_minorista~ "Otros comercios minoristas",
+                                         actividad_comercial %in% agregados$ensenanza ~ "Enseñanza",
                                          T~actividad_comercial)) %>% 
-  select(actividad_comercial) %>% unique() 
+  group_by(actividad_comercial) %>% 
+  summarise(total = sum(total)) %>% 
+  arrange(desc(total)) %>% 
+  adorn_totals()
                                   
                                   
                                   
@@ -323,11 +342,31 @@ ggsave("mapa_zonas_hab.jpg",dpi = "retina", width = 10, height = 8)
 
 excluded_df %>% 
   st_drop_geometry() %>% 
-  group_by(`Actividad comercial` =  actividad_comercial) %>% 
-  summarise(`Total de comercios` = n()) %>% 
-  arrange(desc(`Total de comercios`)) %>% 
-  adorn_totals() %>% 
-  export("excluded_df.xlsx")
+  group_by(actividad_comercial) %>% 
+  summarise(total= n()) %>% 
+  arrange(desc(total)) %>% 
+  mutate(actividad_comercial = case_when(actividad_comercial %in% agregados$rest_comidas ~ "Restaurantes y comidas",
+                                         actividad_comercial %in% agregados$indum_acces_calz_text ~ "Indumentaria, accesorios, calzado y textiles",
+                                         actividad_comercial %in% agregados$serv_pers~ "Servicios personales",
+                                         actividad_comercial %in% agregados$transp_almacenam ~ "Transporte y almacenamiento",
+                                         actividad_comercial %in% agregados$autos_motos~"Autos, motos y servicios relacionados",
+                                         actividad_comercial %in% agregados$serv_prof_fin~"Servicios profesionales",
+                                         actividad_comercial %in% agregados$alim_bebid~"Venta de alimentos y bebidas",
+                                         actividad_comercial %in% agregados$Hoteles_alojamiento~"Hoteles, geriátricos y alojamiento",
+                                         actividad_comercial %in% agregados$art_hogar_const ~ "Artículos para el hogar y construcción",
+                                         actividad_comercial %in% agregados$farm_insum_med ~ "Farmacias, perfumerías e insumos médicos",
+                                         actividad_comercial %in% agregados$esparcimiento ~ "Servicios de esparcimiento",
+                                         actividad_comercial %in% agregados$act_adm_apoyo ~ "Actividades administrativas y de apoyo",
+                                         actividad_comercial %in% agregados$info_com ~ "Servicios de información y comunicaciones",
+                                         actividad_comercial %in% agregados$serv_inmob ~ "Servicios inmobiliarios",
+                                         actividad_comercial %in% agregados$interm_financ_seguros~ "Servicios de intermediación financiera y seguros",
+                                         actividad_comercial %in% agregados$comercio_minorista~ "Otros comercios minoristas",
+                                         actividad_comercial %in% agregados$ensenanza ~ "Enseñanza",
+                                         T~actividad_comercial)) %>% 
+  group_by(actividad_comercial) %>% 
+  summarise(total = sum(total)) %>% 
+  arrange(desc(total)) %>% 
+  adorn_totals() %>% export("excluded_df.xlsx")
 
 
 data_inf %>% 
@@ -337,9 +376,30 @@ data_inf %>%
 
 joined_filtered_df %>% 
   st_drop_geometry() %>% 
-  group_by(`Actividad comercial` =  actividad_comercial) %>% 
-  summarise(`Total de comercios` = n()) %>% 
-  arrange(desc(`Total de comercios`)) %>% 
+  group_by(actividad_comercial) %>% 
+  summarise(total= n()) %>% 
+  arrange(desc(total)) %>% 
+  mutate(actividad_comercial = case_when(actividad_comercial %in% agregados$rest_comidas ~ "Restaurantes y comidas",
+                                         actividad_comercial %in% agregados$indum_acces_calz_text ~ "Indumentaria, accesorios, calzado y textiles",
+                                         actividad_comercial %in% agregados$serv_pers~ "Servicios personales",
+                                         actividad_comercial %in% agregados$transp_almacenam ~ "Transporte y almacenamiento",
+                                         actividad_comercial %in% agregados$autos_motos~"Autos, motos y servicios relacionados",
+                                         actividad_comercial %in% agregados$serv_prof_fin~"Servicios profesionales",
+                                         actividad_comercial %in% agregados$alim_bebid~"Venta de alimentos y bebidas",
+                                         actividad_comercial %in% agregados$Hoteles_alojamiento~"Hoteles, geriátricos y alojamiento",
+                                         actividad_comercial %in% agregados$art_hogar_const ~ "Artículos para el hogar y construcción",
+                                         actividad_comercial %in% agregados$farm_insum_med ~ "Farmacias, perfumerías e insumos médicos",
+                                         actividad_comercial %in% agregados$esparcimiento ~ "Servicios de esparcimiento",
+                                         actividad_comercial %in% agregados$act_adm_apoyo ~ "Actividades administrativas y de apoyo",
+                                         actividad_comercial %in% agregados$info_com ~ "Servicios de información y comunicaciones",
+                                         actividad_comercial %in% agregados$serv_inmob ~ "Servicios inmobiliarios",
+                                         actividad_comercial %in% agregados$interm_financ_seguros~ "Servicios de intermediación financiera y seguros",
+                                         actividad_comercial %in% agregados$comercio_minorista~ "Otros comercios minoristas",
+                                         actividad_comercial %in% agregados$ensenanza ~ "Enseñanza",
+                                         T~actividad_comercial)) %>% 
+  group_by(actividad_comercial) %>% 
+  summarise(total = sum(total)) %>% 
+  arrange(desc(total)) %>%
   adorn_totals() %>% 
   export("joined_filtered.xlsx")
 
